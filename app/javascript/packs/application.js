@@ -3,17 +3,18 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-import Rails from "@rails/ujs"
-import Turbolinks from "turbolinks"
-import * as ActiveStorage from "@rails/activestorage"
-import "channels"
+import Rails from "@rails/ujs";
+import Turbolinks from "turbolinks";
+import * as ActiveStorage from "@rails/activestorage";
+import "channels";
+import "./expenses";
 
-import jQuery from 'jquery';
-window.$ = jQuery
-window.jQuery = jQuery
+import jQuery from "jquery";
+window.$ = jQuery;
+window.jQuery = jQuery;
 
-import 'bootstrap/dist/js/bootstrap'
-require("jgrowl")
-Rails.start()
-Turbolinks.start()
-ActiveStorage.start()
+import "bootstrap/dist/js/bootstrap";
+require("jgrowl");
+Rails.start();
+Turbolinks.start();
+ActiveStorage.start();
