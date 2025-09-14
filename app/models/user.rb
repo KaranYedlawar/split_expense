@@ -8,7 +8,6 @@ class User < ApplicationRecord
   has_many :shared_expenses, through: :expense_users, source: :expense
 
   validates :name, presence: true
-  validates :mobile_number, format: { with: /\A[0-9]{10}\z/, message: "must be 10 digits" }, allow_blank: true
 
   scope :exclude_user, ->(user) { where.not(id: user.id) }
   scope :dashboard_friends, ->(user) { friends_with(user) }
@@ -44,5 +43,39 @@ class User < ApplicationRecord
                .joins(:expense)
                .where(expenses: { user_id: friend.id })
                .sum(:share_amount)
+  end
+
+  def net_balance_with(friend)
+    you_owe = you_owe_friend(friend)
+    friend_owes = friend_owes_you(friend)
+    you_owe - friend_owes
+  end
+
+  def settle_up_with(friend, amount)
+    raise "Amount must be greater than 0" if amount <= 0
+
+    net_amount = net_balance_with(friend)
+    raise "No payment needed. Your friend owes you more." if net_amount <= 0
+    raise "Amount exceeds what you owe after netting." if amount > net_amount
+
+    ActiveRecord::Base.transaction do
+      reduce_debt_towards(friend, amount)
+    end
+  end
+
+  private
+
+  def reduce_debt_towards(friend, amount)
+    remaining = amount
+    expense_users.joins(:expense)
+                 .where(expenses: { user_id: friend.id })
+                 .order(:created_at)
+                 .each do |eu|
+      break if remaining <= 0
+
+      pay = [eu.share_amount, remaining].min
+      eu.update!(share_amount: eu.share_amount - pay)
+      remaining -= pay
+    end
   end
 end

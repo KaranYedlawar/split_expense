@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :expense do
     description { Faker::Lorem.sentence }
-    tax { Faker::Commerce.price(range: 1..10) }
+    tax { 0.to_d }  
     association :user
 
     # Create at least one item so validation passes

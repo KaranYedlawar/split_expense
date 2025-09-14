@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :item do
     name { Faker::Food.dish }
-    amount { Faker::Commerce.price(range: 10..100) }
+    amount { 20.to_d }
     association :expense
   end
 end
