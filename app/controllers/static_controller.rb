@@ -1,13 +1,16 @@
 class StaticController < ApplicationController
   def dashboard
-    @friends  = User.friends_with(current_user)
-    @expenses = current_user.shared_expenses.includes(:expense_users, :items)
-
+    load_dashboard_data
     @expense = Expense.new
     @expense.items.build
   end
 
-  def people
-    @friends = User.exclude_user(current_user)
+  private
+
+  # Method to load friends + expenses
+  def load_dashboard_data
+    loader = DashboardLoader.new(current_user)
+    @friends  = loader.friends
+    @expenses = loader.expenses
   end
 end

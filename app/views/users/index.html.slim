@@ -1,0 +1,32 @@
+/ app/views/users/index.html.slim
+.dashboard-wrapper
+  aside.side-bar-area
+    .friends-list
+      p.friends-list-header FRIENDS
+      - @friends.each do |friend|
+        = link_to friend.name.presence || friend.email, user_path(friend), class: "friend-name"
+
+  .main-area
+    - if @user
+      h1.top-bar-title = "#{@user.name}'s Expenses"
+    - else
+      h1.top-bar-title All Users
+      p Click a user to see their expenses
+
+    .expenses-list
+      - if @expenses.any?
+        - @expenses.each do |expense|
+          .expense-item
+            .item-lhs
+              p = expense.created_at.strftime("%b %d")
+              p = expense.description
+            .item-rhs
+              .you-details
+                p Paid
+                p = number_to_currency(expense.total_amount)
+              .you-details
+                - lent_amount = expense.expense_users.where.not(user_id: expense.user_id).sum(:share_amount)
+                p Lent
+                p = number_to_currency(lent_amount)
+      - else
+        p No expenses to show

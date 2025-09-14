@@ -17,11 +17,13 @@ gem 'webpacker', '~> 5.0'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
 
 group :development do
   gem 'fabrication'
-  gem 'faker'
   gem 'listen', '~> 3.3'
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'spring'
@@ -41,3 +43,4 @@ gem 'nio4r', '~> 2.5.9'
 gem 'msgpack', '>= 1.5.0'
 gem 'bootsnap', '>= 1.9.4'
 gem 'nokogiri', '>= 1.13.10'
+gem 'net-smtp', require: false

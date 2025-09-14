@@ -13,24 +13,44 @@ class Expense < ApplicationRecord
 
   before_validation :calculate_total_amount
 
-  # Splits expense equally among participants and creates ExpenseUser records
   def split_expense!(participant_ids)
     expense_users.destroy_all
-
-    participants = User.where(id: participant_ids)
-    participants = participants.to_a.push(user) unless participants.include?(user)
-
-    per_person_share = total_amount.to_d / participants.size
-
-    participants.each do |participant|
-      expense_users.create!(
-        user: participant,
-        share_amount: per_person_share
-      )
-    end
+    participants = build_participants(participant_ids)
+    user_shares = calculate_user_shares(participants)
+    persist_user_shares(user_shares)
   end
 
   private
+
+  def build_participants(participant_ids)
+    users = User.where(id: participant_ids).to_a
+    users << user unless users.include?(user)
+    users
+  end
+
+  def calculate_user_shares(participants)
+    shares = Hash.new(0)
+
+    items.each do |item|
+      if item.assigned_to_id.present?
+        shares[item.assigned_to_id] += item.amount
+      else
+        per_person = item.amount.to_d / participants.size
+        participants.each { |p| shares[p.id] += per_person }
+      end
+    end
+
+    per_person_tax = (tax || 0).to_d / participants.size
+    participants.each { |p| shares[p.id] += per_person_tax }
+
+    shares
+  end
+
+  def persist_user_shares(shares)
+    shares.each do |user_id, share_amount|
+      expense_users.create!(user_id: user_id, share_amount: share_amount)
+    end
+  end
 
   def must_have_at_least_one_item
     if items.empty? || items.all? { |i| i.amount.blank? }
@@ -39,8 +59,7 @@ class Expense < ApplicationRecord
   end
 
   def calculate_total_amount
-    item_total = items.map { |item| item.amount.to_d }.sum
+    item_total = items.sum { |item| item.amount.to_d }
     self.total_amount = item_total + (tax || 0)
   end
 end
-

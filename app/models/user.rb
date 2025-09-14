@@ -11,6 +11,7 @@ class User < ApplicationRecord
   validates :mobile_number, format: { with: /\A[0-9]{10}\z/, message: "must be 10 digits" }, allow_blank: true
 
   scope :exclude_user, ->(user) { where.not(id: user.id) }
+  scope :dashboard_friends, ->(user) { friends_with(user) }
 
   scope :friends_with, ->(user) {
     joins(:expense_users)

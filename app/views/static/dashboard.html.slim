@@ -3,7 +3,7 @@
     .friends-list
       p.friends-list-header FRIENDS
       - @friends.each do |friend|
-        a.friend-name = friend.name.presence || friend.email
+        = link_to friend.name.presence || friend.email, user_path(friend), class: "friend-name"
 
   .main-area
     .top-bar
@@ -113,6 +113,6 @@
           = f.submit "Save Expense", class: "btn btn-primary"
 
 - if notice
-  .alert.alert-success = notice
+  .alert.alert-success.mt-2 = notice
 - if alert
-  .alert.alert-danger = alert
+  .alert.alert-danger.mt-2 = alert
