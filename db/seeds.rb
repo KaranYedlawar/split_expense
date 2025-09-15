@@ -7,17 +7,24 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-Fabricate.times(10, :user)
+if Rails.env.production?
+  # Fabricate 10 random users
+  Fabricate.times(10, :user)
 
-[
-  { email: "john@example.com", name: "John" },
-  { email: "anbu@example.com", name: "Anbu" },
-  { email: "barath@example.com", name: "Barath" }
-].each do |user_attrs|
-  User.find_or_create_by!(email: user_attrs[:email]) do |user|
-    user.name = user_attrs[:name]
-    user.password = "password"
-    user.password_confirmation = "password"
+  # Seed specific users
+  users_to_seed = [
+    { email: "john@example.com", name: "John" },
+    { email: "anbu@example.com", name: "Anbu" },
+    { email: "barath@example.com", name: "Barath" }
+  ]
+
+  users_to_seed.each do |attrs|
+    user = User.find_or_initialize_by(email: attrs[:email])
+    user.name = attrs[:name]
+    user.password ||= "password"
+    user.password_confirmation ||= "password"
+    user.save!
   end
 end
+
 
