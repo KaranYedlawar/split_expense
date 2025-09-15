@@ -7,24 +7,32 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-if Rails.env.production?
-  # Fabricate 10 random users
-  Fabricate.times(10, :user)
+Fabricate.times(10, :user)
+# db/seeds.rb
 
-  # Seed specific users
-  users_to_seed = [
-    { email: "john@example.com", name: "John" },
-    { email: "anbu@example.com", name: "Anbu" },
+puts "Running seeds for environment: #{Rails.env}"
+
+if Rails.env.production?
+  emails = ["john@example.com", "anbu@example.com", "barath@example.com"]
+  User.where(email: emails).delete_all
+
+  users = [
+    { email: "john@example.com",  name: "John" },
+    { email: "anbu@example.com",  name: "Anbu" },
     { email: "barath@example.com", name: "Barath" }
   ]
 
-  users_to_seed.each do |attrs|
-    user = User.find_or_initialize_by(email: attrs[:email])
-    user.name = attrs[:name]
-    user.password ||= "password"
-    user.password_confirmation ||= "password"
-    user.save!
+  users.each do |attrs|
+    User.create!(
+      email:                 attrs[:email],
+      name:                  attrs[:name],
+      password:              "password",
+      password_confirmation: "password",
+      confirmed_at:          Time.current
+    )
   end
+
+  puts "Created test users: #{emails.join(', ')}"
+else
+  puts "Skipping user seeds: not running in production environment."
 end
-
-
