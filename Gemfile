@@ -43,6 +43,7 @@ gem 'nio4r', '~> 2.5.9'
 gem 'msgpack', '>= 1.5.0'
 gem 'bootsnap', '>= 1.9.4'
 gem 'nokogiri', '>= 1.13.10'
+gem 'logger', '>= 1.5', '< 2.0', require: false
 
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
