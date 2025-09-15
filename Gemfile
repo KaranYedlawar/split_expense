@@ -47,4 +47,3 @@ gem 'nokogiri', '>= 1.13.10'
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
-gem "logger", require: false
