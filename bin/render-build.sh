@@ -1,19 +1,24 @@
 #!/usr/bin/env bash
-set -o errexit
+set -euo pipefail
 
-bundle install
+echo "=== Render Build Script Starting ==="
+export RAILS_ENV=production
+export NODE_ENV=production
+export NODE_OPTIONS="--max-old-space-size=512"
 
-# Install JS dependencies so webpacker:compile can run
+echo "=== Installing Gems ==="
+bundle install --jobs 4 --retry 3
+
+echo "=== Installing Node/Yarn Dependencies ==="
 yarn install --check-files
 
-# Compile webpacker packs into public/packs
-bundle exec rails webpacker:compile
-
-# Precompile Sprockets assets
+echo "=== Precompiling Assets ==="
 bundle exec rails assets:precompile
 
-# Clean old assets
+echo "=== Cleaning Old Assets ==="
 bundle exec rails assets:clean
 
-# Run migrations
+echo "=== Running Migrations ==="
 bundle exec rails db:migrate
+
+echo "=== Build Complete ==="
