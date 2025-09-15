@@ -8,27 +8,17 @@
 
 
 # Fabricate.times(10, :user)
-# db/seeds.rb
 
 puts "Running seeds for environment: #{Rails.env}"
 
-if Rails.env.production?
-  users = [
-    { email: "john@example.com",  name: "John" },
-    { email: "anbu@example.com",  name: "Anbu" },
-    { email: "barath@example.com", name: "Barath" }
-  ]
-
-  users.each do |attrs|
-    user = User.find_or_initialize_by(email: attrs[:email])
-    user.update!(
-      name:                  attrs[:name],
-      password:              "password",
-      password_confirmation: "password"
-    )
+[
+  { email: "john@example.com", name: "John" },
+  { email: "jane@example.com", name: "Jane" },
+  { email: "bob@example.com",  name: "Bob"  }
+].each do |attrs|
+  User.find_or_create_by!(email: attrs[:email]) do |user|
+    user.name = attrs[:name]
+    user.password = "Password@123"
+    user.password_confirmation = "Password@123"
   end
-
-  puts "Ensured test users exist: #{users.map { |u| u[:email] }.join(', ')}"
-else
-  puts "Skipping user seeds: not running in production environment."
 end

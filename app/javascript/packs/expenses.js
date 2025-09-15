@@ -8,7 +8,11 @@ document.addEventListener("turbolinks:load", () => {
 
   if (!itemsContainer || !addItemBtn || !itemTemplate) return;
 
-  addItemBtn.addEventListener("click", () => {
+  // Remove previous event listeners to avoid duplicates
+  const newAddItemBtn = addItemBtn.cloneNode(true);
+  addItemBtn.replaceWith(newAddItemBtn);
+
+  newAddItemBtn.addEventListener("click", () => {
     const newItemHtml = itemTemplate.innerHTML.replace(
       /NEW_RECORD/g,
       new Date().getTime()
