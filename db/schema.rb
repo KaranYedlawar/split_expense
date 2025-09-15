@@ -10,10 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_083940) do
+ActiveRecord::Schema.define(version: 2025_09_11_152942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "expense_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "expense_id", null: false
+    t.decimal "share_amount", precision: 10, scale: 2, default: "0.0"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["expense_id"], name: "index_expense_users_on_expense_id"
+    t.index ["user_id"], name: "index_expense_users_on_user_id"
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.string "description"
+    t.decimal "total_amount", precision: 10, scale: 2
+    t.decimal "tax", precision: 10, scale: 2
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_expenses_on_user_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.bigint "expense_id", null: false
+    t.bigint "assigned_to_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["expense_id"], name: "index_items_on_expense_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -29,4 +59,9 @@ ActiveRecord::Schema.define(version: 2021_10_06_083940) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "expense_users", "expenses"
+  add_foreign_key "expense_users", "users"
+  add_foreign_key "expenses", "users"
+  add_foreign_key "items", "expenses"
+  add_foreign_key "items", "users", column: "assigned_to_id"
 end
