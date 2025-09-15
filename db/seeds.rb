@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-Fabricate.times(10, :user)
+# Fabricate.times(10, :user)
 # db/seeds.rb
 
 puts "Running seeds for environment: #{Rails.env}"
