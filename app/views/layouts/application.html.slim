@@ -9,7 +9,7 @@ html
     = csp_meta_tag
 
     /— Webpacker CSS pack —
-    = stylesheet_pack_tag "application", media: "all", "data-turbolinks-track": "reload"
+    = stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload"
 
   - if ['sessions', 'registrations'].include?(controller_name)
     body.text-center
