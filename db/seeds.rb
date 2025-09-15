@@ -24,8 +24,7 @@ if Rails.env.production?
     user.update!(
       name:                  attrs[:name],
       password:              "password",
-      password_confirmation: "password",
-      confirmed_at:          Time.current
+      password_confirmation: "password"
     )
   end
 
