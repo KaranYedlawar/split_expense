@@ -23,7 +23,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'fabrication'
   gem 'listen', '~> 3.3'
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'spring'
@@ -48,3 +47,4 @@ gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem "logger", "~> 1.5.3", require: false
+gem 'fabrication'
