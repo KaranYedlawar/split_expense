@@ -19,7 +19,6 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
   gem 'factory_bot_rails'
-  gem 'faker'
 end
 
 group :development do
@@ -48,3 +47,4 @@ gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem "logger", "~> 1.5.3", require: false
 gem 'fabrication'
+gem 'faker'
