@@ -6,19 +6,21 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-
-# Fabricate.times(10, :user)
+Fabricate.times(10, :user)
 
 puts "Running seeds for environment: #{Rails.env}"
 
-[
+users = [
   { email: "john@example.com", name: "John" },
   { email: "jane@example.com", name: "Jane" },
   { email: "bob@example.com",  name: "Bob"  }
-].each do |attrs|
-  User.find_or_create_by!(email: attrs[:email]) do |user|
-    user.name = attrs[:name]
-    user.password = "Password@123"
-    user.password_confirmation = "Password@123"
-  end
+]
+
+users.each do |attrs|
+  user = User.find_or_initialize_by(email: attrs[:email])
+  user.name = attrs[:name]
+  user.password = "Password@123"
+  user.password_confirmation = "Password@123"
+  user.save!
+  puts "✓ Seeded #{user.email}"
 end
